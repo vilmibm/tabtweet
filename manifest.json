@@ -1,0 +1,16 @@
+{
+  "name": "tweet tab",
+  "version": "0.1",
+  "description": "tab complete for twitter",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "popup":"popup.html"
+  },
+  "permissions": [
+    "http://api.flickr.com/"
+  ],
+  "content_scripts": [
+    "matches":"http://*.twitter.com/*",
+    "js":["jquery.js","script.js"]
+  ]
+}
