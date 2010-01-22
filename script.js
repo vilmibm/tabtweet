@@ -1,10 +1,22 @@
-// list: http://twitter.com/statuses/friends.format
+var friends = "http://twitter.com/statuses/friends.json";
 
-var status = $("#status");
+var statusbox = $("#status");
 
-// XXX get list of friends
-    // XXX populate autocomplete
+var data;
 
-// XXX add keypress event listener to status
-    // XXX trigger autocomplete on '@'
+$.getJSON(friends, function(json) {
+    data = $.map(json, function(n,i) {
+       return "@" + n.screen_name; 
+    });
+    statusbox.autocomplete(
+        data.sort(
+            function(a,b){return a.toLowerCase()>b.toLowerCase()?1:-1; }
+        )
+    );	
+});
 
+// XXX todo:
+    // 1. all friends, not just 100
+    // 2. animating "working" plugin icon
+    // 3. figure out auth stuff
+    // 4. new icon

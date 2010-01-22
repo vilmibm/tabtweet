@@ -7,10 +7,19 @@
     "popup":"popup.html"
   },
   "permissions": [
-    "http://api.flickr.com/"
+    "http://*.twitter.com/*"
   ],
   "content_scripts": [
-    "matches":"http://*.twitter.com/*",
-    "js":["jquery.js","script.js"]
-  ]
+    {
+        "matches":["http://*.twitter.com/*"],
+        "js": [
+            "jquery.js",
+            "script.js",
+            "jquery.autocomplete.js"
+        ],
+        "css": [
+            "jquery.autocomplete.css"
+        ]    
+    }    
+  ]    
 }
