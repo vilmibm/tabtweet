@@ -4,6 +4,7 @@
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
+    text-align: left;
 }
 
 .ac_results ul {
@@ -43,6 +44,6 @@
 }
 
 .ac_over {
-	background-color: #0A246A;
+    background-color: #19c9ff;
 	color: white;
 }
