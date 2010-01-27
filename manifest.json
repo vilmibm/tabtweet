@@ -15,7 +15,9 @@
         "js": [
             "jquery.js",
             "script.js",
-            "jquery.autocomplete.js"
+            "jquery.autocomplete.js",
+            "oauth.js",
+            "sha1.js"
         ],
         "css": [
             "jquery.autocomplete.css"
