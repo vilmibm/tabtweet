@@ -2,52 +2,7 @@
 <head>
 </head>
 <body>
-<script src="jquery.js"></script>
-<script src="oauth.js"></script>
-<script src="sha1.js"></script>
-<script type="text/javascript">
-$(function() {
-    $("#sign_in").click(function(e) {
-        // XXX hide sign in input
-        // XXX start animation
-        // request twitter auth token
-        var request_token_url = 'http://twitter.com/oauth/request_token';
-        var accessor = {
-            //token: "...",
-            //tokenSecret: "...",
-            consumerKey:    'ruXg6gDIBxihEyMd9jCHdQ',
-            consumerSecret: '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4'
-        };
-
-        var message = {
-            action: request_token_url,
-            method: "GET",
-            parameters: {}
-        };
-
-        OAuth.completeRequest(message, accessor);
-        OAuth.SignatureMethod.sign(message, accessor);
-        request_token_url = request_token_url + '?' + OAuth.formEncode(message.parameters);
-
-        $.get(request_token_url, function(data) {
-            alert(data);
-            // XXX create tab
-            // XXX go to oauth/authorize at twitter in tab
-            // XXX show PIN input
-            // XXX call oauth/access_token with PIN
-            // XXX get access token; store in local storage?
-        });
-
-    });
-});    
-</script>
 <h1>tab tweet</h1>
-
-<input id="sign_in" type="submit" value="Sign into Twitter" />
-<span id="work" style="display:none;">Working...</span>
-<span style="display:none;">
-    <input id="pin" type="text" />
-    <input id="pin_submit" type="submit" value="Submit your 7-digit PIN from Twitter" />
-</span>
+See the options page to configure.
 </body>
 </html>

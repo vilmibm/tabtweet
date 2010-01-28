@@ -2,6 +2,7 @@
   "name": "tweet tab",
   "version": "0.1",
   "description": "tab complete for twitter",
+  "options_page": "options.html",
   "browser_action": {
     "default_icon": "icon.png",
     "popup":"popup.html"
@@ -12,7 +13,7 @@
   ],
   "content_scripts": [
     {
-        "matches":["http://*.twitter.com/*"],
+        "matches":["http://twitter.com/","http://twitter.com/home"],
         "js": [
             "jquery.js",
             "script.js",
