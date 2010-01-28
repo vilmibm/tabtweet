@@ -82,11 +82,12 @@ $(function() {
         OAuth.SignatureMethod.sign(final_message, final_accessor);
         access_url = access_url + '?' + OAuth.formEncode(final_message.parameters)
         $.post(access_url, function(data) {
-            response = decode(data);
-            // XXX get access token; store in local storage?
+            var response = decode(data);
+            // get access token; store in local storage
+            localStorage['access_token']       = response['oauth_token'];
+            localStorage['access_token_secret' = response['oauth_token_secret'];
         });
     });
-
 });
 </script>
 <h1>tab tweet</h1>
