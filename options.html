@@ -6,9 +6,22 @@
 <script src="oauth.js"></script>
 <script src="sha1.js"></script>
 <script type="text/javascript">
+function decode(data) {
+    var response;
+    $.each(data.split('&'), function() {
+        response[this.split('=')[0]] = this.split('=')[1];
+    });
+
+    return response;
+}
 var request_token_url = 'http://twitter.com/oauth/request_token';
 var authorize_url     = 'http://twitter.com/oauth/authorize';
 var access_url        = 'http://twitter.com/oauth/access_token';
+var consumer_key      = 'ruXg6gDIBxihEyMd9jCHdQ';
+var consumer_secret   = '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4';
+var request_token;
+var request_token_secret;
+
 var accessor = {
     //token: "...",
     //tokenSecret: "...",
@@ -34,12 +47,11 @@ $(function() {
         request_token_url = request_token_url + '?' + OAuth.formEncode(message.parameters);
 
         $.get(request_token_url, function(data) {
-            var response = [];
-            $.each(data.split('&'), function() {
-                response[this.split('=')[0]] = this.split('=')[1];
-            });
-            var request_token = response['oauth_token'];
-            accessor.token = request_token;
+            var response = decode(data);
+            accessor.token       = response['oauth_token'];
+            accessor.tokenSecret = response['oauth_token_secret'];
+            request_token        = response['oauth_token'];
+            request_token_secret = response['oauth_token_secret'];
             message.action = authorize_url;
             OAuth.completeRequest(message, accessor);
             OAuth.SignatureMethod.sign(message, accessor);
@@ -54,21 +66,28 @@ $(function() {
 
     $("#pin_submit").click(function() {
         // call oauth/access_token with PIN
-        message.action = access_url;
-        message.parameters.oauth_verifier = $("#pin").attr("value");
-        // XXX This isn't working! how to get that field into OAuth?
-        alert(message.parameters.oauth_verifier);
-        OAuth.completeRequest(message, accessor);
-        OAuth.SignatureMethod.sign(message, accessor);
-        access_url = access_url + '?' + OAuth.formEncode(message.parameters)
-        $.get(access_url, function(data) {
+        var final_accessor = {
+            consumerKey : consumer_key,
+            consumerSecret : consumer_secret,
+            token : request_token,
+            tokenSecret : request_token_secret,
+            verifier : $("#pin").attr("value")
+        };
+        var final_message = {
+            action : access_url,
+            method : "POST",
+            parameters : {}
+        };
+        OAuth.completeRequest(final_message, final_accessor);
+        OAuth.SignatureMethod.sign(final_message, final_accessor);
+        access_url = access_url + '?' + OAuth.formEncode(final_message.parameters)
+        $.post(access_url, function(data) {
+            response = decode(data);
             // XXX get access token; store in local storage?
-            alert('hi');
-            alert(data);
         });
     });
 
-});    
+});
 </script>
 <h1>tab tweet</h1>
 
