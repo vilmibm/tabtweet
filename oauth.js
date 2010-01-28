@@ -262,6 +262,9 @@ OAuth.setProperties(OAuth, // utility functions
         if (map.oauth_nonce == null) {
             OAuth.setParameter(message, "oauth_nonce", OAuth.nonce(6));
         }
+        if (map.oauth_verifier == null) {
+            OAuth.setParameter(message, "oauth_verifier", accessor.verifier || "");
+        }
         OAuth.SignatureMethod.sign(message, accessor);
     }
 ,
