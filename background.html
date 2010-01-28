@@ -1,0 +1,5 @@
+<script>
+    chrome.extension.onRequest.addListener(function(request, sender, send_response) {
+        send_response([localStorage['access_token'], localStorage['access_token_secret']]);
+    });
+</script>

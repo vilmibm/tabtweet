@@ -7,7 +7,7 @@
 <script src="sha1.js"></script>
 <script type="text/javascript">
 function decode(data) {
-    var response;
+    var response = new Array;
     $.each(data.split('&'), function() {
         response[this.split('=')[0]] = this.split('=')[1];
     });
@@ -85,7 +85,7 @@ $(function() {
             var response = decode(data);
             // get access token; store in local storage
             localStorage['access_token']       = response['oauth_token'];
-            localStorage['access_token_secret' = response['oauth_token_secret'];
+            localStorage['access_token_secret'] = response['oauth_token_secret'];
         });
     });
 });
