@@ -98,10 +98,13 @@ $(function() {
         });
 
         $("div.complete").click(function() {
-            chrome.tabs.getSelected(function(tab) {
-                var tab_id = tab.id;
-                chrome.tabs.create({ url: "http://twitter.com" }, function() {
-                    chrome.tabs.remove(tab_id);
+            chrome.windows.getLastFocused(function(foc_win) {
+                var win_id = foc_win.id;
+                chrome.tabs.getSelected(win_id, function(tab) {
+                    var tab_id = tab.id;
+                    chrome.tabs.create({ url: "http://twitter.com" }, function() {
+                        chrome.tabs.remove(tab_id);
+                    });
                 });
             });
         });
