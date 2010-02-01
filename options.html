@@ -17,75 +17,93 @@ function decode(data) {
 var request_token_url = 'http://twitter.com/oauth/request_token';
 var authorize_url     = 'http://twitter.com/oauth/authorize';
 var access_url        = 'http://twitter.com/oauth/access_token';
-var consumer_key      = 'ruXg6gDIBxihEyMd9jCHdQ';
-var consumer_secret   = '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4';
 var request_token;
 var request_token_secret;
+var accessor;
+var message;
+var consumer_key;
+var consumer_secret;
 
-var accessor = {
-    //token: "...",
-    //tokenSecret: "...",
-    consumerKey:    'ruXg6gDIBxihEyMd9jCHdQ',
-    consumerSecret: '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4'
-};
-
-var message = {
-    action: '',
-    method: "GET",
-    parameters: {}
-};
 
 $(function() {
-    $("#sign_in").click(function(e) {
-        // hide sign in input
-        $("#sign_in").hide();
-        // XXX start animation
-        // request twitter auth token
-        message.action = request_token_url;
-        OAuth.completeRequest(message, accessor);
-        OAuth.SignatureMethod.sign(message, accessor);
-        request_token_url = request_token_url + '?' + OAuth.formEncode(message.parameters);
-
-        $.get(request_token_url, function(data) {
-            var response = decode(data);
-            accessor.token       = response['oauth_token'];
-            accessor.tokenSecret = response['oauth_token_secret'];
-            request_token        = response['oauth_token'];
-            request_token_secret = response['oauth_token_secret'];
-            message.action = authorize_url;
+    chrome.extension.sendRequest('consumer', function(response) {
+        consumer_key    = response[0];
+        consumer_secret = response[1];
+        $("#sign_in").click(function(e) {
+            accessor = {
+                //token: "...",
+                //tokenSecret: "...",
+                consumerKey:    consumer_key,
+                consumerSecret: consumer_secret
+            };
+            message = {
+                action: '',
+                method: "GET",
+                parameters: {}
+            };
+            // hide sign in input
+            $("#sign_in").hide();
+            // XXX start animation
+            // request twitter auth token
+            message.action = request_token_url;
             OAuth.completeRequest(message, accessor);
             OAuth.SignatureMethod.sign(message, accessor);
-            authorize_url = authorize_url + '?' + OAuth.formEncode(message.parameters)
+            request_token_url = request_token_url + '?' + OAuth.formEncode(message.parameters);
 
-            // create tab, go to oauth/authorize URL
-            chrome.tabs.create({ url: authorize_url });
-            // show PIN input
-            $("span.pin").show();
+            $.get(request_token_url, function(data) {
+                var response = decode(data);
+                accessor.token       = response['oauth_token'];
+                accessor.tokenSecret = response['oauth_token_secret'];
+                request_token        = response['oauth_token'];
+                request_token_secret = response['oauth_token_secret'];
+                message.action = authorize_url;
+                OAuth.completeRequest(message, accessor);
+                OAuth.SignatureMethod.sign(message, accessor);
+                authorize_url = authorize_url + '?' + OAuth.formEncode(message.parameters)
+
+                // create tab, go to oauth/authorize URL
+                chrome.tabs.create({ url: authorize_url });
+                // show PIN input
+                $("span.pin").show();
+            });
         });
-    });
 
-    $("#pin_submit").click(function() {
-        // call oauth/access_token with PIN
-        var final_accessor = {
-            consumerKey : consumer_key,
-            consumerSecret : consumer_secret,
-            token : request_token,
-            tokenSecret : request_token_secret,
-            verifier : $("#pin").attr("value")
-        };
-        var final_message = {
-            action : access_url,
-            method : "POST",
-            parameters : {}
-        };
-        OAuth.completeRequest(final_message, final_accessor);
-        OAuth.SignatureMethod.sign(final_message, final_accessor);
-        access_url = access_url + '?' + OAuth.formEncode(final_message.parameters)
-        $.post(access_url, function(data) {
-            var response = decode(data);
-            // get access token; store in local storage
-            localStorage['access_token']       = response['oauth_token'];
-            localStorage['access_token_secret'] = response['oauth_token_secret'];
+        $("#pin_submit").click(function() {
+            // call oauth/access_token with PIN
+            accessor = {
+                consumerKey : consumer_key,
+                consumerSecret : consumer_secret,
+                token : request_token,
+                tokenSecret : request_token_secret,
+                verifier : $("#pin").attr("value")
+            };
+            message = {
+                action : access_url,
+                method : "POST",
+                parameters : {}
+            };
+            OAuth.completeRequest(message, accessor);
+            OAuth.SignatureMethod.sign(message, accessor);
+            access_url = access_url + '?' + OAuth.formEncode(message.parameters)
+            $.post(access_url, function(data) {
+                var response = decode(data);
+                // get access token; store in local storage
+                localStorage['access_token']        = response['oauth_token'];
+                localStorage['access_token_secret'] = response['oauth_token_secret'];
+                $("span.pin").fadeOut(function() {
+                    $("div.complete").fadeIn();
+                });
+
+            });
+        });
+
+        $("div.complete").click(function() {
+            chrome.tabs.getSelected(function(tab) {
+                var tab_id = tab.id;
+                chrome.tabs.create({ url: "http://twitter.com" }, function() {
+                    chrome.tabs.remove(tab_id);
+                });
+            });
         });
     });
 });
@@ -98,5 +116,9 @@ $(function() {
     <input id="pin" type="text" />
     <input id="pin_submit" type="submit" value="Submit your 7-digit PIN from Twitter" />
 </span>
+<div class="complete" style="display:none;">
+    <h2>Great! Authenticaton is complete.</h2>
+    <input type="submit" id="finish" value="Click to close this tab and go to Twitter" />
+</div>
 </body>
 </html>
