@@ -37,5 +37,5 @@ chrome.extension.sendRequest('', function(response) {
 // XXX todo:
     // 1. all friends, not just 100
     // 2. animating "working" plugin icon
-    // 3. figure out auth stuff
+    // 3. CLEAN UP OAUTH PROCESS
     // 4. new icon
