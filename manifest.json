@@ -1,5 +1,5 @@
 {
-  "name": "tab tweet",
+  "name": "tabtweet",
   "version": "1.0",
   "description": "tab complete for twitter",
   "background_page" : "background.html",
