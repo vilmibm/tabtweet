@@ -4,6 +4,11 @@
   "description": "tab complete for twitter",
   "background_page" : "background.html",
   "options_page": "options.html",
+  "icons": {
+    "32" : "icon32.png",
+    "48" : "icon48.png",
+    "128" : "icon128.png"
+  },
   "permissions": [
     "http://*.twitter.com/*",
     "tabs"
