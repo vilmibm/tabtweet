@@ -29,11 +29,13 @@ $(function() {
 function friend_append(cursor) {
     $.getJSON(make_url(cursor), function(json) {
         cursor = json.next_cursor;
-        friends_list.push(
-            $.map(json.users, function(n,i) { return '@' + n.screen_name })
-        );
+        $.map(json.users, function(n,i) { friends_list.push('@' + n.screen_name); });
         if ( cursor == 0 ) {
-            statusbox.autocomplete(friends_list.sort(friend_sort));
+            statusbox.autocomplete(
+                friends_list.sort(
+                    function (a,b) {return a.toLowerCase()>b.toLowerCase()?1:-1;}
+                )
+            );
         }
         else {
             friend_append(cursor);
