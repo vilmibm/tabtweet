@@ -6,5 +6,8 @@
         if ( request === 'consumer' ) {
             send_response(['ruXg6gDIBxihEyMd9jCHdQ', '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4']);
         }
+        if ( request === 'consumer_access' ) {
+            send_response(['ruXg6gDIBxihEyMd9jCHdQ', '5SLxFQ0WrXPfOC11dbIq8ASihJvecHEvHK4YvLuQq4',localStorage['access_token'], localStorage['access_token_secret']]);
+        }
     });
 </script>
