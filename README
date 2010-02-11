@@ -1,0 +1,7 @@
+tabtweet uses jQuery to add an @name autocomplete box to Twitter.
+
+It is both a chrom{e,ium} extension (in the chromium directory) and a
+greasemonkey user script (in the grease folder). The former has an
+OAuthentication functionality for users who protect their tweets; the latter
+does not. The latter is also not done as of the creation of this README. Enjoy
+:)
